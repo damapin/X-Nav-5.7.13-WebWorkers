@@ -2,32 +2,43 @@
 <html>
  <head>
   <title>Ejercicio con WebWorkers</title>
-
-  <script>
-function buscarPrimos() {
-  var n = 1;
-  primelist = "";
-  search: while (n<parseInt(document.getElementById("formulario").input.value)) {
-    n += 1;
-    for (var i = 2; i <= Math.sqrt(n); i += 1)
-      if (n % i == 0)
-        continue search;
-    // found a prime!
-    primelist += " " + n;
-    document.getElementById('result').innerHTML = primelist;
-  }
-}
-  </script>
-
-
+  <meta charset="utf-8">
  </head>
  <body>
   <form id="formulario" action="" method="POST">
   Numero: <input type="text" name="input">
   </form>
-  <button onclick="buscarPrimos()">Buscar primos</button>
+  <button onclick="startWorker()">Buscar primos</button>
   <p>Los numeros primos hasta el numero dado son: <span id="result"></span></p>
 
 
  </body>
+  <script>
+    var limit = 0;
+    var w;
+
+    function startWorker() {
+
+        // Si hay soporte para web workers lo creo
+        document.getElementById("result").innerHTML="";
+        if(typeof(Worker) !== "undefined") {
+            if(typeof(w) == "undefined") {
+                w = new Worker("primos.js");
+            }
+            // Asigno el límite de búsqueda desde el DOM.
+            limit = parseInt(document.getElementById("formulario").input.value);
+
+            // Se lo envío al worker.
+            w.postMessage(limit);
+            
+            // Recojo el resultado y lo muestro.
+            w.onmessage = function(event) {
+                document.getElementById("result").innerHTML = event.data;
+            };
+
+        } else {
+            document.getElementById("result").innerHTML = "Sorry! No Web Worker support.";
+        }
+    }
+  </script>
 </html>
