@@ -10,6 +10,9 @@ onmessage = function(event){
 
 
 function buscarPrimos() {
+  // Reinicio las variables para una nueva búsqueda
+  primelist = "";
+  n=1;
 
   search: while (n<limit) {
     n += 1;
@@ -21,8 +24,10 @@ function buscarPrimos() {
   }
   // Envío el resultado
   postMessage(primelist);
-  // Reinicio las variables para una nueva búsqueda
-  primelist = "";
-  n=1;
+
 }
 
+/* TODO: cuando ponemos un límite alto se queda un buen rato calculando. Hay que
+  buscar un tamaño de datos para ir concatenando al resultado obtenido en la iteración
+  previa y enviar una marca cuado terminemos para cerrar el worker, cosa que no
+  estás haciendo.*/
