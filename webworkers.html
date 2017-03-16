@@ -33,7 +33,14 @@
             
             // Recojo el resultado y lo muestro.
             w.onmessage = function(event) {
-                document.getElementById("result").innerHTML = event.data;
+                if (event.data == "0"){
+                  w.terminate();
+                  w = undefined;
+                  console.log("Finalizando worker");
+                }
+                else{
+                  document.getElementById("result").innerHTML += event.data;
+                }
             };
 
         } else {

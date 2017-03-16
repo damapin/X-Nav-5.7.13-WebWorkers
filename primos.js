@@ -13,6 +13,8 @@ function buscarPrimos() {
   // Reinicio las variables para una nueva búsqueda
   primelist = "";
   n=1;
+  var counter = 0;
+  var len = 200;
 
   search: while (n<limit) {
     n += 1;
@@ -21,9 +23,19 @@ function buscarPrimos() {
         continue search;
     // found a prime!
     primelist += " " + n;
+    counter += 1;
+    if (counter == len){
+       // Envío el resultado
+      postMessage(primelist);
+      console.log("Worker: Enviando sublista de longitud " + len);
+      primelist = "";
+      counter = 0;
+    }
   }
-  // Envío el resultado
-  postMessage(primelist);
+  if (n == limit){
+      postMessage(primelist);
+      postMessage("0");
+    }
 
 }
 
